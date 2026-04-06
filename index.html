@@ -1,0 +1,25 @@
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
+
+const PASSWORD = 'art-portfolio_SeaGlass-13'
+const TARGET = 'https://https://github.com/creativesara/Portfolio/new/main
+
+async function handleRequest(req) {
+  const url = new URL(req.url)
+  const pass = url.searchParams.get('pw') || (await req.text()).match(/pw=([^&\s]+)/)?.[1]
+  if (pass === PASSWORD) {
+    // redirect to the actual GitHub Pages site
+    return Response.redirect(TARGET, 302)
+  }
+  // show a simple password form
+  return new Response(`
+    <html><body>
+    <h2>Enter password</h2>
+    <form method="get">
+      <input name="pw" type="password" />
+      <button type="submit">Enter</button>
+    </form>
+    </body></html>
+  `, { headers: { 'Content-Type': 'text/html' } })
+}
